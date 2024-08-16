@@ -15,7 +15,11 @@
 
 #define MI_DISP_PROCFS_ENABLE 1
 
+#ifdef CONFIG_DEBUG_FS
 #define MI_DISP_DEBUGFS_ENABLE 1
+#else
+#define MI_DISP_DEBUGFS_ENABLE 0
+#endif
 
 #define MI_DISP_LOG_ENABLE 1
 
