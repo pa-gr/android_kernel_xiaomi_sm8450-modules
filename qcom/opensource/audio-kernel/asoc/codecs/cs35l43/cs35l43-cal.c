@@ -13,10 +13,7 @@
  *
  */
 
-#define DEBUG
-
 #define DEFAULT_CALR    9790//7*8192/5.85714
-
 
 static int cs35l43_channel_swap_put(struct snd_kcontrol *kcontrol,
 				 struct snd_ctl_elem_value *ucontrol)
