@@ -4218,6 +4218,12 @@ static int sde_kms_pm_restore(struct device *dev)
 		return 0;
 	}
 
+	ret = pm_runtime_get_sync(dev);
+	if (ret < 0) {
+		SDE_ERROR("failed to enable resource, ret:%d\n", ret);
+		return ret;
+	}
+
 	/*Handle splash handoff in hibernation exit */
 	ret = _sde_kms_pm_hibernate_helper(sde_kms);
 
@@ -4240,6 +4246,7 @@ static int sde_kms_pm_restore(struct device *dev)
 
 	sde_kms->freeze_late = false;
 
+	pm_runtime_put_sync(dev);
 	return ret;
 }
 
