@@ -2692,31 +2692,6 @@ static int drv_cmd_get_country(struct hdd_adapter *adapter,
 	return ret;
 }
 
-/**
- * set APF working status per WLAN chip's suspend monitor mode
-
- * @adapter: pointer to adapter on which request is received
- * Return: On success 0, negative value on error.
- */
-
-static int drv_apf_enable(struct hdd_adapter *adapter, bool apf_enable)
-{
-	QDF_STATUS status;
-
-	hdd_prevent_suspend(WIFI_POWER_EVENT_WAKELOCK_WOW);
-
-	status = sme_set_apf_enable_disable(hdd_adapter_get_mac_handle(adapter),
-					    adapter->vdev_id, apf_enable);
-	if (!QDF_IS_STATUS_SUCCESS(status)) {
-		hdd_err("Unable to post sme apf enable/disable message (status-%d)",
-				status);
-		return -EINVAL;
-	}
-	adapter->apf_context.apf_enabled = apf_enable;
-
-	hdd_allow_suspend(WIFI_POWER_EVENT_WAKELOCK_WOW);
-	return 0;
-}
 
 static int drv_cmd_set_roam_trigger(struct hdd_adapter *adapter,
 				    struct hdd_context *hdd_ctx,
@@ -3115,10 +3090,6 @@ static int drv_cmd_set_suspend_mode(struct hdd_adapter *adapter,
 		hdd_err("Range validation failed");
 		return -EINVAL;
 	}
-
-	//MIUI: ADD
-	//idle_monitor: 0-screen on/monitor off/APF disable, 1: screen off/monitor on/APF enable.
-	drv_apf_enable(adapter, idle_monitor);
 
 	hdd_debug("APF status and idle_monitor:%d, ", idle_monitor);
 	if (idle_monitor == 0)
